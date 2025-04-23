@@ -486,10 +486,10 @@ public class SwerveSubsystem extends SubsystemBase
    *
    * @param velocity Velocity according to the field.
    */
-  public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity)
+  public Command driveFieldOriented(Supplier<ChassisSpeeds> cs)
   {
     return run(() -> {
-      swerveDrive.driveFieldOriented(velocity.get());
+      swerveDrive.driveFieldOriented(cs.get());
     });
   }
 
