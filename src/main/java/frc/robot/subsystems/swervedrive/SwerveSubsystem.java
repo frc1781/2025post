@@ -56,18 +56,8 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase
 {
-
-  /**
-   * Swerve drive object.
-   */
   private final SwerveDrive swerveDrive;
-  /**
-   * Enable vision odometry updates while driving.
-   */
   private final boolean     visionDriveTest = false;
-  /**
-   * PhotonVision class to keep an accurate odometry.
-   */
   private       Vision      vision;
 
   /**
@@ -78,13 +68,10 @@ public class SwerveSubsystem extends SubsystemBase
   public SwerveSubsystem(File directory)
   {
     boolean blueAlliance = false;
-    Pose2d startingPose = blueAlliance ? new Pose2d(new Translation2d(Meter.of(1),
-                                                                      Meter.of(4)),
-                                                    Rotation2d.fromDegrees(0))
-                                       : new Pose2d(new Translation2d(Meter.of(16),
-                                                                      Meter.of(4)),
-                                                    Rotation2d.fromDegrees(180));
-    // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
+    Pose2d startingPose = 
+      blueAlliance ? 
+        new Pose2d(new Translation2d(Meter.of(1), Meter.of(4)), Rotation2d.fromDegrees(0))
+      : new Pose2d(new Translation2d(Meter.of(16), Meter.of(4)), Rotation2d.fromDegrees(180));
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try
     {
@@ -96,12 +83,9 @@ public class SwerveSubsystem extends SubsystemBase
       throw new RuntimeException(e);
     }
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
-    swerveDrive.setCosineCompensator(false);//!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
-    swerveDrive.setAngularVelocityCompensation(true,
-                                               true,
-                                               0.1); //Correct for skew that gets worse as angular velocity increases. Start with a coefficient of 0.1.
-    swerveDrive.setModuleEncoderAutoSynchronize(false,
-                                                1); // Enable if you want to resynchronize your absolute encoders and motor encoders periodically when they are not moving.
+    swerveDrive.setCosineCompensator(false); //!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
+    swerveDrive.setAngularVelocityCompensation(true, true, 0.1); //Correct for skew that gets worse as angular velocity increases. Start with a coefficient of 0.1.
+    swerveDrive.setModuleEncoderAutoSynchronize(false, 1); // Enable if you want to resynchronize your absolute encoders and motor encoders periodically when they are not moving.
     // swerveDrive.pushOffsetsToEncoders(); // Set the absolute encoder to be used over the internal encoder and push the offsets onto it. Throws warning if not possible
     if (visionDriveTest)
     {
@@ -121,16 +105,11 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public SwerveSubsystem(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg)
   {
-    swerveDrive = new SwerveDrive(driveCfg,
-                                  controllerCfg,
-                                  Constants.MAX_SPEED,
-                                  new Pose2d(new Translation2d(Meter.of(2), Meter.of(0)),
-                                             Rotation2d.fromDegrees(0)));
+    swerveDrive = new 
+      SwerveDrive(driveCfg, controllerCfg, Constants.MAX_SPEED,
+        new Pose2d(new Translation2d(Meter.of(2), Meter.of(0)), Rotation2d.fromDegrees(0)));
   }
 
-  /**
-   * Setup the photon vision class.
-   */
   public void setupPhotonVision()
   {
     vision = new Vision(swerveDrive::getPose, swerveDrive.field);
@@ -153,9 +132,6 @@ public class SwerveSubsystem extends SubsystemBase
   {
   }
 
-  /**
-   * Setup AutoBuilder for PathPlanner.
-   */
   public void setupPathPlanner()
   {
     // Load the RobotConfig from the GUI settings. You should probably
@@ -231,7 +207,6 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public Command aimAtTarget(Cameras camera)
   {
-
     return run(() -> {
       Optional<PhotonPipelineResult> resultO = camera.getBestResult();
       if (resultO.isPresent())
@@ -239,10 +214,9 @@ public class SwerveSubsystem extends SubsystemBase
         var result = resultO.get();
         if (result.hasTargets())
         {
-          drive(getTargetSpeeds(0,
-                                0,
-                                Rotation2d.fromDegrees(result.getBestTarget()
-                                                             .getYaw()))); // Not sure if this will work, more math may be required.
+          // Not sure if this will work, more math may be required.
+          drive(getTargetSpeeds(0,0, Rotation2d.fromDegrees(result.getBestTarget().getYaw()))); 
+          
         }
       }
     });
@@ -274,11 +248,7 @@ public class SwerveSubsystem extends SubsystemBase
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
 
 // Since AutoBuilder is configured, we can use it to build pathfinding commands
-    return AutoBuilder.pathfindToPose(
-        pose,
-        constraints,
-        edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
-                                     );
+    return AutoBuilder.pathfindToPose(pose, constraints, edu.wpi.first.units.Units.MetersPerSecond.of(0) );
   }
 
   /**

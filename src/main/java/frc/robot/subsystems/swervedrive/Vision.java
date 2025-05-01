@@ -48,32 +48,18 @@ import swervelib.telemetry.SwerveDriveTelemetry;
  */
 public class Vision
 {
-
-  /**
-   * April Tag Field Layout of the year.
-   */
-  public static final AprilTagFieldLayout fieldLayout                     = AprilTagFieldLayout.loadField(
-      AprilTagFields.k2025ReefscapeAndyMark);
+  public static final AprilTagFieldLayout fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
   /**
    * Ambiguity defined as a value between (0,1). Used in {@link Vision#filterPose}.
    */
-  private final       double              maximumAmbiguity                = 0.25;
-  /**
-   * Photon Vision Simulation
-   */
-  public              VisionSystemSim     visionSim;
-  /**
-   * Count of times that the odom thinks we're more than 10meters away from the april tag.
-   */
-  private             double              longDistangePoseEstimationCount = 0;
-  /**
-   * Current pose from the pose estimator using wheel odometry.
-   */
-  private             Supplier<Pose2d>    currentPose;
+  private final double maximumAmbiguity = 0.25;
+  public VisionSystemSim visionSim;
+  private double longDistangePoseEstimationCount = 0;  //cnt of times odom thinks we are 10 meters away from the april tag
+  private Supplier<Pose2d> currentPose;
   /**
    * Field from {@link swervelib.SwerveDrive#field}
    */
-  private             Field2d             field2d;
+  private Field2d field2d;
 
 
   /**
