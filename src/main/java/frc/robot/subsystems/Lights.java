@@ -211,12 +211,12 @@ public class Lights extends SubsystemBase
             if(h < 60)
             {
                 r = 255;
-                g = (h/60) * 255;
+                g = Math.round((h/60f) * 255f);
                 b = 0;
             }
             else if(h < 120)
             {
-                r = ((120 - h)/60) * 255;
+                r = Math.round(((120 - h)/60f) * 255f);
                 g = 255;
                 b = 0;
             }
@@ -224,17 +224,17 @@ public class Lights extends SubsystemBase
             {
                 r = 0;
                 g = 255;
-                b = ((h - 120)/60) * 255;
+                b = Math.round(((h - 120)/60f) * 255f);
             }
             else if(h < 240)
             {
                 r = 0;
-                g = ((240 - h)/60) * 255;
+                g = Math.round(((240 - h)/60f) * 255f);
                 b = 255;
             }
             else if(h < 300)
             {
-                r = ((h - 240)/60) * 255;
+                r = Math.round(((h - 240)/60f) * 255f);
                 g = 0;
                 b = 255;
             }
@@ -242,7 +242,7 @@ public class Lights extends SubsystemBase
             {
                 r = 255;
                 g = 0;
-                b = ((360 - h)/60) * 255;
+                b = Math.round(((360 - h)/60f) * 255f);
             }
         }
 
