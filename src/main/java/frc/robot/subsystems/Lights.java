@@ -1,10 +1,11 @@
 package frc.robot.subsystems;
 
-import java.util.Timer;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
-public class Lights 
+public class Lights extends SubsystemBase
 {
     private final int LED_LENGTH = 150;
     
@@ -40,23 +41,25 @@ public class Lights
 
     public Lights()
     {
-        ledController = new AddressableLED(1);
-        ledBuffer = new AddressableLEDBuffer(LED_LENGTH + 1);
-        ledController.setLength(ledBuffer.getLength());
-        ledController.setData(ledBuffer);
-        ledController.start();
+        controller = new AddressableLED(1);
+        buffer = new AddressableLEDBuffer(LED_LENGTH + 1);
+        controller.setLength(buffer.getLength());
+        controller.setData(buffer);
+        controller.start();
         
         timer = new Timer();
         timer.reset();
         timer.start();
     }
 
-    Color solid(int i, Color color)
+
+
+    private Color solid(int i, Color color)
     {
-        return color;
+        return new Color(color);
     }
 
-    Color blink(int i, Color color, int delay)
+    private Color blink(int i, Color color, double delay)
     {
         if(timer.get() > delay)
         {
@@ -64,7 +67,7 @@ public class Lights
             {
                 timer.reset();
             }
-            return color;
+            return new Color(color);
         }
         else
         {
@@ -72,7 +75,7 @@ public class Lights
         }
     }
 
-    Color flash(int i, Color color, int delay)
+    private Color flash(int i, Color color, double delay)
     {
         boolean toggle = timer.get() > delay;
         if(timer.get() > delay * 2)
@@ -81,7 +84,7 @@ public class Lights
         }
         if((i % 2 == 0) != toggle)
         {
-            return color;
+            return new Color(color);
         }
         else
         {
@@ -89,20 +92,15 @@ public class Lights
         }
     }
 
-    Color rainbow(int i)
-    {
-
-    }
-
-    Color march(int i, Color color, int delay, int ammount)
+    private Color march(int i, Color color, double delay, int ammount)
     {
         if(timer.get() > delay * ammount)
         {
             timer.reset();
         }
-        if(i % ammount == Math.round(timer.get()/delay))
+        if(i % ammount == Math.floor(timer.get()/delay))
         {
-            return color;
+            return new Color(color);
         }
         else
         {
@@ -110,12 +108,23 @@ public class Lights
         }
     }
 
-    Color patternLookup(Patterns pattern, int i, Color color)
+    private Color rainbow(int i)
     {
-        switch(Pattern)
+        if(timer.get() > 1)
+        {
+            timer.reset();
+        }
+        int hue = Math.round((float) timer.get() * 255);
+        hue = (hue + i) % 255;
+        return new Color(hue);
+    }
+
+    private Color patternLookup(Patterns pattern, int i, Color color)
+    {
+        switch(pattern)
         {
             case SOLID:
-                return solid(i, color)
+                return solid(i, color);
             case BLINK:
                 return blink(i, color, 0.4);
             case FAST_BLINK:
@@ -131,18 +140,18 @@ public class Lights
         }
     }
 
-    Color speicalLookup(Special special, int i)
+    private Color specialLookup(Special special, int i)
     {
-        switch(specail)
+        switch(special)
         {
             case RAINBOW:
-                return solid(i, color)
+                return rainbow(i);
             default: case OFF:
                 return new Color(0, 0, 0);
         }
     }
 
-    Color colorLookup(Colors colorName)
+    private Color colorLookup(Colors colorName)
     {
         switch(colorName)
         {
@@ -165,60 +174,28 @@ public class Lights
         }
     }
 
-    void run(Colors colorName, Patterns pattern)
+    public void run(Colors colorName, Patterns pattern)
     {
-        Color color = colorLookup(colorName);
+        Color startColor = colorLookup(colorName);
         for(int i = 0; i < LED_LENGTH; i++)
         {
-            color = patternLookup(pattern, i, color);
-            buffer.setRGB(color.g, color.r, color.b)
+            Color color = patternLookup(pattern, i, startColor);
+            buffer.setRGB(i, color.r, color.g, color.b);
         }
         controller.setData(buffer);
     }
 
-    void runSpecial(Special special)
+    public void runSpecial(Special special)
     {
         for(int i = 0; i < LED_LENGTH; i++)
         {
             Color color = specialLookup(special, i);
-            buffer.setRGB(color.g, color.r, color.b)
+            buffer.setRGB(i, color.r, color.g, color.b);
         }
         controller.setData(buffer);
     }
 
-    Color solid(int i, Color color)
-    {
-        return null;
-    }
-
-    Color colorLookup(Colors color)
-    {
-        switch (color) {
-            case RED:
-                return new Color(255, 0, 0);
-            case ORANGE:
-                return new Color(255, 150, 0);
-            case YELLOW:
-                return new Color(255, 255, 0);
-            case GREEN:
-                return new Color(0, 255, 0);
-            case BLUE:
-                return new Color(0, 0, 255);
-            case PURPLE:
-                return new Color(255, 0, 255);
-            case WHITE:
-                return new Color(254, 254, 254);
-            default:
-                return new Color(0, 0, 0);
-        }
-    }
-
-    void special(Special special)
-    {
-
-    }
-
-    class Color 
+    private class Color 
     {
         public int r;
         public int g;
@@ -231,11 +208,31 @@ public class Lights
             this.b = b;
         }
 
+        public Color(int h)
+        {
+            h = h/255;
+            r = (5+h*6) % 6;
+            g = (3+h*6) % 6;
+            b = (1+h*6) % 6;
+            r = 1 - Math.max(Math.min(r,Math.min(4 - r, 1)), 0);
+            g = 1 - Math.max(Math.min(g,Math.min(4 - g, 1)), 0);
+            b = 1 - Math.max(Math.min(b,Math.min(4 - b, 1)), 0);
+        }
+
         public Color()
         {
             r = 0;
             g = 0;
             b = 0;
         }
+
+        public Color(Color color)
+        {
+            r = color.r;
+            g = color.g;
+            b = color.b;
+        }
     }
+
+
 }

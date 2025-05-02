@@ -19,6 +19,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.SetLights;
+import frc.robot.subsystems.Lights;
+import frc.robot.subsystems.Lights.Special;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
@@ -26,8 +29,8 @@ import swervelib.SwerveInputStream;
 public class RobotContainer
 {
   final CommandXboxController driverXbox = new CommandXboxController(0);
-  private final SwerveSubsystem drivebase = new 
-    SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ava"));
+  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ava"));
+  private final Lights lights = new Lights();
 
   //Driving the robot during teleOp
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
@@ -43,7 +46,6 @@ public class RobotContainer
   SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
     .withControllerHeadingAxis(driverXbox::getRightX, driverXbox::getRightY)
     .headingWhile(true);
-
 
    // Clone's the angular velocity input stream and converts it to a robotRelative input stream.
   SwerveInputStream driveRobotOriented = driveAngularVelocity.copy()
@@ -99,6 +101,7 @@ public class RobotContainer
     else
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+      lights.setDefaultCommand(new SetLights(lights, Lights.Special.OFF));
     }
 
     if (Robot.isSimulation())
@@ -126,23 +129,15 @@ public class RobotContainer
     } 
     else
     {
-      driverXbox.a()
-        .onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
+      driverXbox.start().whileTrue(Commands.none());
+      driverXbox.back().whileTrue(Commands.none());
+      driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      driverXbox.rightBumper().onTrue(Commands.none());
 
-      driverXbox.x()
-        .onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-
-      driverXbox.start()
-        .whileTrue(Commands.none());
-
-      driverXbox.back()
-        .whileTrue(Commands.none());
-
-      driverXbox.leftBumper()
-        .whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-
-      driverXbox.rightBumper()
-        .onTrue(Commands.none());
+      driverXbox.y().onTrue(new SetLights(lights, Lights.Special.RAINBOW));
+      driverXbox.b().onTrue(new SetLights(lights, Lights.Colors.BLUE, Lights.Patterns.SOLID));
     }
   }
 
