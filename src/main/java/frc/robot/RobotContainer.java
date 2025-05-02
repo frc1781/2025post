@@ -136,8 +136,8 @@ public class RobotContainer
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
 
-      driverXbox.y().onTrue(new SetLights(lights, Lights.Special.RAINBOW));
-      driverXbox.b().onTrue(new SetLights(lights, Lights.Colors.BLUE, Lights.Patterns.SOLID));
+      driverXbox.y().onTrue(new SetLights(lights, Lights.Colors.BLUE, Lights.Patterns.FLASH));
+      driverXbox.b().onTrue(new SetLights(lights, Lights.Colors.RED, Lights.Patterns.MARCH));
     }
   }
 
