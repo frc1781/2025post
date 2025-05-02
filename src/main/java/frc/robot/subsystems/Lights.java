@@ -52,8 +52,6 @@ public class Lights extends SubsystemBase
         timer.start();
     }
 
-
-
     private Color solid(int i, Color color)
     {
         return new Color(color);
@@ -114,8 +112,8 @@ public class Lights extends SubsystemBase
         {
             timer.reset();
         }
-        int hue = Math.round((float) timer.get() * 255);
-        hue = (hue + i) % 255;
+        int hue = Math.round((float) timer.get() * 360);
+        hue = (hue + i * 4) % 360;
         return new Color(hue);
     }
 
@@ -210,13 +208,42 @@ public class Lights extends SubsystemBase
 
         public Color(int h)
         {
-            h = h/255;
-            r = (5+h*6) % 6;
-            g = (3+h*6) % 6;
-            b = (1+h*6) % 6;
-            r = 1 - Math.max(Math.min(r,Math.min(4 - r, 1)), 0);
-            g = 1 - Math.max(Math.min(g,Math.min(4 - g, 1)), 0);
-            b = 1 - Math.max(Math.min(b,Math.min(4 - b, 1)), 0);
+            if(h < 60)
+            {
+                r = 255;
+                g = (h/60) * 255;
+                b = 0;
+            }
+            else if(h < 120)
+            {
+                r = ((120 - h)/60) * 255;
+                g = 255;
+                b = 0;
+            }
+            else if(h < 180)
+            {
+                r = 0;
+                g = 255;
+                b = ((h - 120)/60) * 255;
+            }
+            else if(h < 240)
+            {
+                r = 0;
+                g = ((240 - h)/60) * 255;
+                b = 255;
+            }
+            else if(h < 300)
+            {
+                r = ((h - 240)/60) * 255;
+                g = 0;
+                b = 255;
+            }
+            else
+            {
+                r = 255;
+                g = 0;
+                b = ((360 - h)/60) * 255;
+            }
         }
 
         public Color()
