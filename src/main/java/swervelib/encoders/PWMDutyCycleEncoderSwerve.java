@@ -47,6 +47,11 @@ public class PWMDutyCycleEncoderSwerve extends SwerveAbsoluteEncoder
 
   }
 
+  @Override
+  public void close() {
+    
+  }
+
   /**
    * Configure the inversion state of the encoder.
    *
