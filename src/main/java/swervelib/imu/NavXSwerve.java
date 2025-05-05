@@ -127,7 +127,7 @@ public class NavXSwerve extends SwerveIMU
     }
 
     getRawReturnZ = getRawReturn3d.getZ();
-    System.out.printf("inverted %s raw %.2f inv %.2f ret %.2f\n", inverted, navXz, navXzInv, getRawReturnZ);
+    //System.out.printf("inverted %s raw %.2f inv %.2f ret %.2f\n", inverted, navXz, navXzInv, getRawReturnZ);
     return getRawReturn3d;
   }
 
