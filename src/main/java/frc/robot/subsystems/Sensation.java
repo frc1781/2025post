@@ -25,7 +25,7 @@ public class Sensation
             @Override
             public boolean getAsBoolean() 
             {
-                return enterBeam.get();
+                return !enterBeam.get();
             }
         };
     }
