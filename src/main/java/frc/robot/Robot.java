@@ -17,18 +17,9 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class Robot extends LoggedRobot {
-  private static Robot instance;
   private Command exampleAuto;
   private RobotContainer theRobotContainer;
   private Timer disabledTimer;
-
-  public Robot() {
-    instance = this;
-  }
-
-  public static Robot getInstance()  {
-    return instance;
-  }
 
   @Override
   public void robotInit() {
