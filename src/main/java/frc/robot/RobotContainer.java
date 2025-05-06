@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.SetLights;
 import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Lights.Special;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -101,7 +100,7 @@ public class RobotContainer
     else
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-      lights.setDefaultCommand(new SetLights(lights, Lights.Special.OFF));
+      lights.setDefaultCommand(lights.set(Lights.Special.OFF));
     }
 
     if (Robot.isSimulation())
@@ -136,8 +135,8 @@ public class RobotContainer
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
 
-      driverXbox.y().onTrue(new SetLights(lights, Lights.Special.RAINBOW));
-      driverXbox.b().onTrue(new SetLights(lights, Lights.Colors.BLUE, Lights.Patterns.SOLID));
+      driverXbox.y().onTrue(lights.set(Lights.Special.RAINBOW));
+      driverXbox.b().onTrue(lights.set(Lights.Colors.BLUE, Lights.Patterns.MARCH));
     }
   }
 
