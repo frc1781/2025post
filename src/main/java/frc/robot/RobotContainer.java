@@ -19,17 +19,21 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.Sensation;
 import frc.robot.subsystems.Lights;
-import frc.robot.subsystems.Lights.Special;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+
 import swervelib.SwerveInputStream;
 
 public class RobotContainer
 {
   final CommandXboxController driverXbox = new CommandXboxController(0);
+  private final Sensation sensation = new Sensation();
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ava"));
   private final Lights lights = new Lights();
+
+  Trigger coralEnter = new Trigger(sensation.enterSupplier());
 
   //Driving the robot during teleOp
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
@@ -136,7 +140,9 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
 
       driverXbox.y().onTrue(lights.set(Lights.Special.RAINBOW));
-      driverXbox.b().onTrue(lights.set(Lights.Colors.BLUE, Lights.Patterns.MARCH));
+      driverXbox.b().onTrue(lights.set(Lights.Colors.WHITE, Lights.Patterns.MARCH));
+
+      coralEnter.onTrue(lights.set(Lights.Colors.YELLOW, Lights.Patterns.FAST_FLASH));
     }
   }
 
