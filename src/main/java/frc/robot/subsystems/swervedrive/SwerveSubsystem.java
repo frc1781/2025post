@@ -66,7 +66,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public SwerveSubsystem(File directory)
   {
-    boolean blueAlliance = false;
+    boolean blueAlliance = true;
     Pose2d startingPose = 
       blueAlliance ? 
         new Pose2d(new Translation2d(Meter.of(1), Meter.of(4)), Rotation2d.fromDegrees(0))
@@ -555,7 +555,6 @@ public class SwerveSubsystem extends SubsystemBase
     if (isRedAlliance())
     {
       zeroGyro();
-      //Set the pose 180 degrees
       resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(180)));
     } else
     {
