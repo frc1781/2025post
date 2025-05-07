@@ -30,7 +30,7 @@ public class RobotContainer
 {
   final CommandXboxController driverXbox = new CommandXboxController(0);
   private final Sensation sensation = new Sensation();
-  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ava"));
+  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ralph"));
   private final Lights lights = new Lights();
 
   Trigger coralEnter = new Trigger(sensation.enterSupplier());
@@ -43,7 +43,11 @@ public class RobotContainer
     .withControllerRotationAxis(() -> driverXbox.getRightX() * -1)  
     .deadband(OperatorConstants.DEADBAND)
     .scaleTranslation(0.8)  //might be changed to 1
-    .allianceRelativeControl(true);
+    .allianceRelativeControl(true)
+    .cubeRotationControllerAxis(true)
+    
+    ;
+
 
   //Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
   SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
@@ -161,4 +165,7 @@ public class RobotContainer
   {
     drivebase.setMotorBrake(brake);
   }
+
+
+
 }

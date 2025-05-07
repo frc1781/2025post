@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -68,6 +70,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
+    theRobotContainer.setMotorBrake(true);
     if (exampleAuto != null) {
       exampleAuto.cancel();
     } 
