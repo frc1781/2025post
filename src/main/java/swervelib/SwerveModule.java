@@ -210,6 +210,7 @@ public class SwerveModule implements AutoCloseable
     driveMotor.setCurrentLimit(configuration.physicalCharacteristics.driveMotorCurrentLimit);
     angleMotor.setLoopRampRate(configuration.physicalCharacteristics.angleMotorRampRate);
     driveMotor.setLoopRampRate(configuration.physicalCharacteristics.driveMotorRampRate);
+    System.out.println("ramp rate:" + configuration.physicalCharacteristics.driveMotorRampRate);
 
     // Config angle encoders
     absoluteEncoder = moduleConfiguration.absoluteEncoder;

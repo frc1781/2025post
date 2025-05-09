@@ -48,4 +48,12 @@ public final class Constants
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 6;
   }
+
+  public static class SensationConstants
+  {
+    public static final int enter = 3;
+    public static final int hopperBack = 1;
+    public static final int hopperFront = 0;
+    public static final int exit = 2;
+  }
 }

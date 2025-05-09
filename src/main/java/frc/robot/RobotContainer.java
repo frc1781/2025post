@@ -19,17 +19,23 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.Sensation;
 import frc.robot.subsystems.Lights;
-import frc.robot.subsystems.Lights.Special;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+
 import swervelib.SwerveInputStream;
 
 public class RobotContainer
 {
   final CommandXboxController driverXbox = new CommandXboxController(0);
-  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ava"));
+  private final Sensation sensation = new Sensation();
+  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ralph"));
   private final Lights lights = new Lights();
+
+  Trigger coralEnter = new Trigger(sensation.enterSupplier());
+  Trigger coralHopper = new Trigger(sensation.hopperSupplier());
+  Trigger coralExit = new Trigger(sensation.exitSupplier());
 
   //Driving the robot during teleOp
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
@@ -39,11 +45,15 @@ public class RobotContainer
     .withControllerRotationAxis(() -> driverXbox.getRightX() * -1)  
     .deadband(OperatorConstants.DEADBAND)
     .scaleTranslation(0.8)  //might be changed to 1
-    .allianceRelativeControl(true);
+    .allianceRelativeControl(true)
+    .cubeRotationControllerAxis(true)
+    
+    ;
+
 
   //Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
   SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
-    .withControllerHeadingAxis(driverXbox::getRightX, driverXbox::getRightY)
+    .withControllerHeadingAxis(() -> driverXbox.getRightX() * -1, () -> driverXbox.getRightY() * -1)
     .headingWhile(true);
 
    // Clone's the angular velocity input stream and converts it to a robotRelative input stream.
@@ -85,8 +95,8 @@ public class RobotContainer
    */
   private void configureBindings()
   {
-    //Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+    Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
+    //Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     //Command driveRobotOrientedAngularVelocity = drivebase.driveFieldOriented(driveRobotOriented);
     //Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngle);
     Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
@@ -99,7 +109,7 @@ public class RobotContainer
     } 
     else
     {
-      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+      drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
       lights.setDefaultCommand(lights.set(Lights.Special.OFF));
     }
 
@@ -118,7 +128,7 @@ public class RobotContainer
 
     if (DriverStation.isTest())
     {
-      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
+      //drivebase.setDefaultCommand(driveFieldOrienteAnglularVelocity); // Overrides drive command above!d
       driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
@@ -136,7 +146,11 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
 
       driverXbox.y().onTrue(lights.set(Lights.Special.RAINBOW));
-      driverXbox.b().onTrue(lights.set(Lights.Colors.BLUE, Lights.Patterns.MARCH));
+      driverXbox.b().onTrue(lights.set(Lights.Colors.WHITE, Lights.Patterns.MARCH));
+
+      coralEnter.and(coralExit.negate()).and(coralHopper.negate()).onTrue(lights.set(Lights.Colors.YELLOW, Lights.Patterns.FAST_FLASH));
+      coralHopper.and(coralExit.negate()).onTrue(lights.set(Lights.Colors.YELLOW, Lights.Patterns.MARCH));
+      coralExit.onFalse(lights.set(Lights.Colors.YELLOW, Lights.Patterns.SOLID));
     }
   }
 
@@ -155,4 +169,7 @@ public class RobotContainer
   {
     drivebase.setMotorBrake(brake);
   }
+
+
+
 }

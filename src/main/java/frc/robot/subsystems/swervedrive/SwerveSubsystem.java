@@ -66,11 +66,11 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public SwerveSubsystem(File directory)
   {
-    boolean blueAlliance = true;
+    boolean blueAlliance = false;
     Pose2d startingPose = 
       blueAlliance ? 
-        new Pose2d(new Translation2d(Meter.of(1), Meter.of(4)), Rotation2d.fromDegrees(0))
-      : new Pose2d(new Translation2d(Meter.of(16), Meter.of(4)), Rotation2d.fromDegrees(180));
+        new Pose2d(new Translation2d(Meter.of(1.2), Meter.of(7.0)), Rotation2d.fromDegrees(-55.0))
+      : new Pose2d(new Translation2d(Meter.of(16.3), Meter.of(1.0)), Rotation2d.fromDegrees(125.0));
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try
     {
