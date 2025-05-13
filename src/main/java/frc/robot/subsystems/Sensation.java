@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Sensation
 {
+    //NOTE: DIGITAL INPUT RETURNS TRUE FOR BEAM NOT BROKEN AND FALSE FOR BROKEN BEAM
+    //      SO IT REPORTING NEGATED VALUE FOR DETECTION OF SOMETHING 
     DigitalInput enterBeam;
     DigitalInput hopperBackBeam;
     DigitalInput hopperFrontBeam;
@@ -21,39 +23,15 @@ public class Sensation
         exitBeam = new DigitalInput(Constants.SensationConstants.exit);
     }
 
-    public BooleanSupplier enterSupplier() 
-    {
-        return new BooleanSupplier()
-        {
-            @Override
-            public boolean getAsBoolean() 
-            {
-                return !enterBeam.get();
-            }
-        };
+    public boolean coralPresent() {
+        return !enterBeam.get() || !hopperBackBeam.get() || !hopperFrontBeam.get();
     }
 
-    public BooleanSupplier hopperSupplier() 
-    {
-        return new BooleanSupplier()
-        {
-            @Override
-            public boolean getAsBoolean() 
-            {
-                return (!hopperBackBeam.get()) || (!hopperFrontBeam.get());
-            }
-        };
+    public boolean coralInHopper() {
+        return !hopperBackBeam.get() || !hopperFrontBeam.get();
     }
 
-    public BooleanSupplier exitSupplier() 
-    {
-        return new BooleanSupplier()
-        {
-            @Override
-            public boolean getAsBoolean() 
-            {
-                return !exitBeam.get();
-            }
-        };
+    public boolean coralExitedHopper() {
+        return !exitBeam.get() && hopperBackBeam.get() && hopperFrontBeam.get();
     }
 }
