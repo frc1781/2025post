@@ -33,9 +33,9 @@ public class RobotContainer
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ava"));
   private final Lights lights = new Lights();
 
-  Trigger coralEnter = new Trigger(sensation.enterSupplier());
-  Trigger coralHopper = new Trigger(sensation.hopperSupplier());
-  Trigger coralExit = new Trigger(sensation.exitSupplier());
+  Trigger coralEnter = new Trigger(sensation::coralPresent);
+  Trigger coralHopper = new Trigger(sensation::coralInHopper);
+  Trigger coralExit = new Trigger(sensation::coralExitedHopper);
 
   //Driving the robot during teleOp
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
@@ -144,9 +144,9 @@ public class RobotContainer
       driverXbox.y().onTrue(lights.set(Lights.Special.RAINBOW));
       driverXbox.b().onTrue(lights.set(Lights.Colors.WHITE, Lights.Patterns.MARCH));
 
-      coralEnter.and(coralExit.negate()).and(coralHopper.negate()).onTrue(lights.set(Lights.Colors.YELLOW, Lights.Patterns.FAST_FLASH));
-      coralHopper.and(coralExit.negate()).onTrue(lights.set(Lights.Colors.YELLOW, Lights.Patterns.MARCH));
-      coralExit.onFalse(lights.set(Lights.Colors.YELLOW, Lights.Patterns.SOLID));
+      coralEnter.and(coralExit.negate()).and(coralHopper.negate()).onTrue(lights.set(Lights.Colors.RED, Lights.Patterns.FAST_FLASH));
+      coralHopper.and(coralExit.negate()).onTrue(lights.set(Lights.Colors.RED, Lights.Patterns.MARCH));
+      coralExit.onFalse(lights.set(Lights.Colors.RED, Lights.Patterns.SOLID));
     }
   }
 
