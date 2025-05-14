@@ -106,6 +106,10 @@ public class NavXSwerve extends SwerveIMU
 //    setOffset(getRawRotation3d());
   }
 
+  private Rotation3d invertedYaw(Rotation3d rot) {
+    return new Rotation3d(rot.getX(), rot.getY(), -rot.getZ());
+  }
+
   /**
    * Fetch the {@link Rotation3d} from the IMU without any zeroing. Robot relative.
    *
@@ -114,40 +118,8 @@ public class NavXSwerve extends SwerveIMU
   @Override
   public Rotation3d getRawRotation3d()
   {
-    double navXz = imu.getRotation3d().getZ();
-    double navXzInv = imu.getRotation3d().unaryMinus().getZ();
-    double getRawReturnZ;
-    Rotation3d getRawReturn3d;
-    
-    if (inverted) {
-      getRawReturn3d = imu.getRotation3d().unaryMinus();
-    }
-    else {
-      getRawReturn3d = imu.getRotation3d();
-    }
-
-    getRawReturnZ = getRawReturn3d.getZ();
-    //System.out.printf("inverted %s raw %.2f inv %.2f ret %.2f\n", inverted, navXz, navXzInv, getRawReturnZ);
-    return getRawReturn3d;
+    return inverted ? invertedYaw(imu.getRotation3d()) : imu.getRotation3d();
   }
-
-  // /**
-  //  * Fetch the {@link Rotation3d} from the IMU. Robot relative.
-  //  *
-  //  * @return {@link Rotation3d} from the IMU.
-  //  */
-  //@Override
-  // public Rotation3d getRotation3d()
-  // {
-  //   return getRawRotation3d().rotateBy(offset.unaryMinus());
-  // }
-
-  // @Override
-  // public Rotation3d getRawRotation3d()
-  // {
-  //   //inverted calls unaryMinus() that seems to do nothing to Z axis.
-  //   return inverted ? imu.getRotation3d().unaryMinus() : imu.getRotation3d();
-  // }
 
   /**
    * Fetch the {@link Rotation3d} from the IMU. Robot relative.
@@ -157,12 +129,7 @@ public class NavXSwerve extends SwerveIMU
   @Override
   public Rotation3d getRotation3d()
   {
-    if (inverted) {
-      return getRawRotation3d().rotateBy(offset.unaryMinus()).unaryMinus();
-    }
-    else {
-      return getRawRotation3d().rotateBy(offset.unaryMinus());
-    }
+    return getRawRotation3d().rotateBy(offset.unaryMinus());
   }
 
   /**
