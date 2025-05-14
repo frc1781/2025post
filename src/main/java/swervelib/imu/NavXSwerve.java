@@ -106,7 +106,7 @@ public class NavXSwerve extends SwerveIMU
 //    setOffset(getRawRotation3d());
   }
 
-  private Rotation3d inverted(Rotation3d rot) {
+  private Rotation3d negate(Rotation3d rot) {
     return new Rotation3d(-rot.getX(), -rot.getY(), -rot.getZ());
   }
 
@@ -118,7 +118,7 @@ public class NavXSwerve extends SwerveIMU
   @Override
   public Rotation3d getRawRotation3d()
   {
-    return inverted ? inverted(imu.getRotation3d()) : imu.getRotation3d();
+    return inverted ? negate(imu.getRotation3d()) : imu.getRotation3d();
   }
 
   /**
