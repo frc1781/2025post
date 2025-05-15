@@ -44,7 +44,7 @@ public class RobotContainer
     () -> driverXbox.getLeftX() * -1)
     .withControllerRotationAxis(() -> driverXbox.getRightX() * -1)  
     .deadband(OperatorConstants.DEADBAND)
-    .scaleTranslation(0.8)  //might be changed to 1
+    .scaleTranslation(1)  //might be changed to 1
     .allianceRelativeControl(true)
     .cubeRotationControllerAxis(true)
     
@@ -67,7 +67,7 @@ public class RobotContainer
     () -> -driverXbox.getLeftX())
       .withControllerRotationAxis(() -> driverXbox.getRawAxis( 2))
       .deadband(OperatorConstants.DEADBAND)
-      .scaleTranslation(0.8)
+      //.scaleTranslation(1)
       .allianceRelativeControl(true);
 
   // This would be cool to test
