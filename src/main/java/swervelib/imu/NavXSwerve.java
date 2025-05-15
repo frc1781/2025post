@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
+
+import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.measure.MutAngularVelocity;
@@ -106,8 +108,13 @@ public class NavXSwerve extends SwerveIMU
 //    setOffset(getRawRotation3d());
   }
 
-  private Rotation3d negate(Rotation3d rot) {
-    return new Rotation3d(-rot.getX(), -rot.getY(), -rot.getZ());
+  private Rotation3d invertFrame(Rotation3d rot) {
+    return new Rotation3d(new Quaternion(
+      rot.getQuaternion().getW(),
+      -rot.getQuaternion().getX(),
+      rot.getQuaternion().getY(),
+      -rot.getQuaternion().getZ()
+    ));
   }
 
   /**
@@ -118,7 +125,7 @@ public class NavXSwerve extends SwerveIMU
   @Override
   public Rotation3d getRawRotation3d()
   {
-    return inverted ? negate(imu.getRotation3d()) : imu.getRotation3d();
+    return inverted ? invertFrame(imu.getRotation3d()) : imu.getRotation3d();
   }
 
   /**
