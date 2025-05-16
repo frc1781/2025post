@@ -67,7 +67,6 @@ public class RobotContainer
       .scaleTranslation(0.8)
       .allianceRelativeControl(true);
 
-  // This would be cool to test
   SwerveInputStream driveDirectAngleKeyboard = driveAngularVelocityKeyboard.copy()
     .withControllerHeadingAxis(
       () -> Math.sin(driverXbox.getRawAxis(2) * Math.PI) *(Math.PI *2),
@@ -83,13 +82,6 @@ public class RobotContainer
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
-   * named factories in {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
-   * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
-   */
   private void configureBindings()
   {
     Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
@@ -107,9 +99,10 @@ public class RobotContainer
     else
     {
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
-      conveyor.setDefaultCommand(conveyor.clearCoral(coralHopper));
-      lights.setDefaultCommand(lights.set(Lights.Special.OFF));
     }
+
+    conveyor.setDefaultCommand(conveyor.clearCoral(coralHopper));
+    lights.setDefaultCommand(lights.set(Lights.Special.OFF));
 
     if (Robot.isSimulation())
     {
@@ -121,7 +114,7 @@ public class RobotContainer
       driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
       driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
       driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
-                                                     () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
+                                                      () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
     }
 
     if (DriverStation.isTest())
@@ -167,7 +160,4 @@ public class RobotContainer
   {
     drivebase.setMotorBrake(brake);
   }
-
-
-
 }
