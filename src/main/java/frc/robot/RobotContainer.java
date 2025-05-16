@@ -19,8 +19,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.Sensation;
-import frc.robot.subsystems.Lights;
+import frc.robot.subsystems.*;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -30,7 +29,8 @@ public class RobotContainer
 {
   final CommandXboxController driverXbox = new CommandXboxController(0);
   private final Sensation sensation = new Sensation();
-  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ralph"));
+  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ava"));
+  private final Conveyor conveyor = new Conveyor();
   private final Lights lights = new Lights();
 
   Trigger coralEnter = new Trigger(sensation::coralPresent);
@@ -46,10 +46,7 @@ public class RobotContainer
     .deadband(OperatorConstants.DEADBAND)
     .scaleTranslation(0.8)  //might be changed to 1
     .allianceRelativeControl(true)
-    .cubeRotationControllerAxis(true)
-    
-    ;
-
+    .cubeRotationControllerAxis(true);
 
   //Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
   SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
@@ -110,6 +107,7 @@ public class RobotContainer
     else
     {
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+      conveyor.setDefaultCommand(conveyor.clearCoral(coralHopper));
       lights.setDefaultCommand(lights.set(Lights.Special.OFF));
     }
 
