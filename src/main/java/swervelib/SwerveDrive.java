@@ -1020,7 +1020,7 @@ public class SwerveDrive implements AutoCloseable
    * Gets the current yaw angle of the robot, as reported by the imu. CCW positive, not wrapped.
    *
    * @return The yaw as a {@link Rotation2d} angle
-   */
+   **/
   public Rotation2d getYaw()
   {
     // Read the imu if the robot is real or the accumulator if the robot is simulated.
