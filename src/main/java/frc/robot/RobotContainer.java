@@ -46,10 +46,7 @@ public class RobotContainer
     .deadband(OperatorConstants.DEADBAND)
     .scaleTranslation(1)  //might be changed to 1
     .allianceRelativeControl(true)
-    .cubeRotationControllerAxis(true)
-    
-    ;
-
+    .cubeRotationControllerAxis(true);
 
   //Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
   SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()

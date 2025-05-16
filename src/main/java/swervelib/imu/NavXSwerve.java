@@ -108,6 +108,10 @@ public class NavXSwerve extends SwerveIMU
 //    setOffset(getRawRotation3d());
   }
 
+  private Rotation3d negate(Rotation3d rot) {
+    return new Rotation3d(-rot.getX(), -rot.getY(), -rot.getZ());
+  }
+
   private Rotation3d invertFrame(Rotation3d rot) {
     return new Rotation3d(new Quaternion(
       rot.getQuaternion().getW(),
@@ -125,7 +129,18 @@ public class NavXSwerve extends SwerveIMU
   @Override
   public Rotation3d getRawRotation3d()
   {
-    return inverted ? invertFrame(imu.getRotation3d()) : imu.getRotation3d();
+    Rotation3d orgR = imu.getRotation3d();
+    Rotation3d invR = negate(imu.getRotation3d());
+    // System.out.printf("inverted %s inv %.4f %.4f %.4f  org %.4f %.4f %.4f \n",
+    //   inverted,
+    //   invR.getX(),
+    //   invR.getY(),
+    //   invR.getZ(),
+    //   orgR.getX(),
+    //   orgR.getY(),
+    //   orgR.getZ()
+    // );
+    return inverted ? negate(imu.getRotation3d()) : imu.getRotation3d();
   }
 
   /**
@@ -136,8 +151,21 @@ public class NavXSwerve extends SwerveIMU
   @Override
   public Rotation3d getRotation3d()
   {
-    return getRawRotation3d().rotateBy(offset.unaryMinus());
+    return getRawRotation3d().rotateBy(negate(offset));
   }
+  //public Rotation3d getRotation3d()
+ // {
+    // Rotation3d raw = getRawRotation3d();
+    // Rotation3d invOffset = negate(offset);
+    // Rotation3d result = getRawRotation3d().rotateBy(negate(offset));
+    // System.out.printf("raw %.4f offset %.4f invOffset %.4f result %.4f\n",
+    //   raw.getZ(),
+    //   offset.getZ(),
+    //   invOffset.getZ(),
+    //   result.getZ()
+    // );
+  //  return getRawRotation3d().rotateBy(negate(offset));
+  //}
 
   /**
    * Fetch the acceleration [x, y, z] from the IMU in meters per second squared. If acceleration isn't supported returns
