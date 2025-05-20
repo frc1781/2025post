@@ -66,7 +66,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public SwerveSubsystem(File directory)
   {
-    boolean blueAlliance = false;
+    boolean blueAlliance = true;
     Pose2d startingPose = 
       blueAlliance ? 
         new Pose2d(new Translation2d(Meter.of(1.2), Meter.of(7.0)), Rotation2d.fromDegrees(-55.0))
