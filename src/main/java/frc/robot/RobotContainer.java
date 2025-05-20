@@ -19,8 +19,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.Sensation;
-import frc.robot.subsystems.Lights;
+import frc.robot.subsystems.*;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -30,7 +29,8 @@ public class RobotContainer
 {
   final CommandXboxController driverXbox = new CommandXboxController(0);
   private final Sensation sensation = new Sensation();
-  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ralph"));
+  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ava"));
+  private final Conveyor conveyor = new Conveyor();
   private final Lights lights = new Lights();
 
   Trigger coralEnter = new Trigger(sensation::coralPresent);
@@ -46,10 +46,7 @@ public class RobotContainer
     .deadband(OperatorConstants.DEADBAND)
     .scaleTranslation(0.8)  //might be changed to 1
     .allianceRelativeControl(true)
-    .cubeRotationControllerAxis(true)
-    
-    ;
-
+    .cubeRotationControllerAxis(true);
 
   //Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
   SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
@@ -70,7 +67,6 @@ public class RobotContainer
       .scaleTranslation(0.8)
       .allianceRelativeControl(true);
 
-  // This would be cool to test
   SwerveInputStream driveDirectAngleKeyboard = driveAngularVelocityKeyboard.copy()
     .withControllerHeadingAxis(
       () -> Math.sin(driverXbox.getRawAxis(2) * Math.PI) *(Math.PI *2),
@@ -86,13 +82,6 @@ public class RobotContainer
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
-   * named factories in {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
-   * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
-   */
   private void configureBindings()
   {
     Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
@@ -110,8 +99,10 @@ public class RobotContainer
     else
     {
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
-      lights.setDefaultCommand(lights.set(Lights.Special.OFF));
     }
+
+    conveyor.setDefaultCommand(conveyor.clearCoral(coralHopper));
+    lights.setDefaultCommand(lights.set(Lights.Special.OFF));
 
     if (Robot.isSimulation())
     {
@@ -123,7 +114,7 @@ public class RobotContainer
       driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
       driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
       driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
-                                                     () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
+                                                      () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
     }
 
     if (DriverStation.isTest())
@@ -169,7 +160,4 @@ public class RobotContainer
   {
     drivebase.setMotorBrake(brake);
   }
-
-
-
 }

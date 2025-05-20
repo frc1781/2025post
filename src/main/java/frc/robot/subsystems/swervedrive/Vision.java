@@ -24,6 +24,9 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Robot;
 import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -272,15 +275,15 @@ public class Vision
   {
     if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE))
     {
-//      try
-//      {
-//        Desktop.getDesktop().browse(new URI("http://localhost:1182/"));
-//        Desktop.getDesktop().browse(new URI("http://localhost:1184/"));
-//        Desktop.getDesktop().browse(new URI("http://localhost:1186/"));
-//      } catch (IOException | URISyntaxException e)
-//      {
-//        e.printStackTrace();
-//      }
+     try
+     {
+       Desktop.getDesktop().browse(new URI("http://localhost:1182/"));
+       Desktop.getDesktop().browse(new URI("http://localhost:1184/"));
+       Desktop.getDesktop().browse(new URI("http://localhost:1186/"));
+     } catch (IOException | URISyntaxException e)
+     {
+       ((Throwable) e).printStackTrace();
+     }
     }
   }
 
@@ -321,32 +324,20 @@ public class Vision
    */
   enum Cameras
   {
-    /**
-     * Left Camera
-     */
-    LEFT_CAM("left",
-             new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(30)),
-             new Translation3d(Units.inchesToMeters(12.056),
-                               Units.inchesToMeters(10.981),
-                               Units.inchesToMeters(8.44)),
+
+    LEFT_CAM("LeftApriltag",
+          new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(0)),
+          new Translation3d(Units.inchesToMeters(6.75), Units.inchesToMeters(7.75), Units.inchesToMeters(11.5)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
-    /**
-     * Right Camera
-     */
-    RIGHT_CAM("right",
-              new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(-30)),
-              new Translation3d(Units.inchesToMeters(12.056),
-                                Units.inchesToMeters(-10.981),
-                                Units.inchesToMeters(8.44)),
+
+    RIGHT_CAM("RightApriltag",
+              new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(0)),
+              new Translation3d(Units.inchesToMeters(9.5), Units.inchesToMeters(-9), Units.inchesToMeters(10.5)),
               VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
-    /**
-     * Center Camera
-     */
-    CENTER_CAM("center",
-               new Rotation3d(0, Units.degreesToRadians(18), 0),
-               new Translation3d(Units.inchesToMeters(-4.628),
-                                 Units.inchesToMeters(-10.687),
-                                 Units.inchesToMeters(16.129)),
+
+    LEFT_SIDE_CAM("LeftSide",
+              new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(90)),
+               new Translation3d(Units.inchesToMeters(-15.5), Units.inchesToMeters(0), Units.inchesToMeters(26.5)),
                VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
 
     /**

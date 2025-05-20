@@ -72,6 +72,7 @@
       "/SmartDashboard/JSON": "Alerts",
       "/SmartDashboard/Motors": "Alerts",
       "/SmartDashboard/PathPlanner": "Alerts",
+      "/SmartDashboard/PhotonAlerts": "Alerts",
       "/SmartDashboard/Pigeon 2 (v6) [13]": "Gyro",
       "/SmartDashboard/Pigeon 2 [13]": "Gyro",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
@@ -129,12 +130,24 @@
       "FMSInfo": {
         "open": true
       },
+      "LiveWindow": {
+        "open": true
+      },
+      "PathPlanner": {
+        "open": true
+      },
+      "Shuffleboard": {
+        "open": true
+      },
       "SmartDashboard": {
         "Field": {
           "open": true
         },
         "open": true,
         "swerve": {
+          "advantagescope": {
+            "open": true
+          },
           "open": true
         }
       }
