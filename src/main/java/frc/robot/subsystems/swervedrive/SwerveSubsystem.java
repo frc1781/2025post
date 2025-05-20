@@ -56,7 +56,7 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class SwerveSubsystem extends SubsystemBase
 {
   private final SwerveDrive swerveDrive;
-  private final boolean     visionDriveTest = false;
+  private final boolean     visionDriveTest = true;
   private       Vision      vision;
 
   /**
