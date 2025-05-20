@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import javax.lang.model.util.ElementScanner14;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
@@ -28,7 +31,8 @@ public class Lights extends SubsystemBase
         FAST_BLINK,
         FLASH,
         FAST_FLASH,
-        MARCH
+        MARCH,
+        WAVES
     }
     public enum Special 
     {
@@ -82,7 +86,7 @@ public class Lights extends SubsystemBase
         {
             timer.reset();
         }
-        if((i % 2 == 0) != toggle)
+        if((Math.floor(i/2) % 2 == 0) != toggle)
         {
             return new Color(color);
         }
@@ -105,6 +109,86 @@ public class Lights extends SubsystemBase
         else
         {
             return new Color();
+        }
+    }
+
+    private Color waves(int i, Color color, double speed)
+    {
+        double waveTime = speed * LED_LENGTH;
+        if(timer.get() > waveTime * 4)
+        {
+            timer.reset();
+        }
+
+        if(i % 2 == 0)
+        {
+            if(timer.get() < waveTime)
+            {
+                double time = timer.get() % waveTime;
+                if(time/speed > i)
+                {
+                    return color;
+                }
+                else
+                {
+                    return new Color();
+                }
+            }
+            else if(timer.get() < waveTime * 2)
+            {
+                return color;
+            }
+            else if(timer.get() < waveTime * 3)
+            {
+                double time = timer.get() % waveTime;
+                if(time/speed > i)
+                {
+                    return new Color();
+                }
+                else
+                {
+                    return color;
+                }
+            }
+            else
+            {
+                return new Color();
+            }
+        }
+        else
+        {
+            if(timer.get() < waveTime)
+            {
+                return new Color();
+            }
+            else if(timer.get() < waveTime * 2)
+            {
+                double time = waveTime - timer.get() % waveTime;
+                if(time/speed > i)
+                {
+                    return new Color();
+                }
+                else
+                {
+                    return color;
+                }
+            }
+            else if(timer.get() < waveTime * 3)
+            {
+                return color;
+            }
+            else
+            {
+                double time = waveTime - timer.get() % waveTime;
+                if(time/speed > i)
+                {
+                    return color;
+                }
+                else
+                {
+                    return new Color();
+                }
+            }
         }
     }
 
@@ -135,6 +219,8 @@ public class Lights extends SubsystemBase
                 return flash(i, color, 0.2);
             case MARCH:
                 return march(i, color, 0.2, 3);
+            case WAVES:
+                return waves(i, color, 0.01);
             default:
                 return new Color(0, 0, 0);
         }

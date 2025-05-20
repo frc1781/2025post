@@ -145,8 +145,8 @@ public class RobotContainer
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
 
-      driverXbox.y().onTrue(lights.set(Lights.Special.RAINBOW));
-      driverXbox.b().onTrue(lights.set(Lights.Colors.WHITE, Lights.Patterns.MARCH));
+      driverXbox.y().onTrue(lights.set(Lights.Colors.WHITE, Lights.Patterns.FLASH));
+      driverXbox.b().onTrue(lights.set(Lights.Colors.WHITE, Lights.Patterns.WAVES));
 
       coralEnter.and(coralExit.negate()).and(coralHopper.negate()).onTrue(lights.set(Lights.Colors.RED, Lights.Patterns.FAST_FLASH));
       coralHopper.and(coralExit.negate()).onTrue(lights.set(Lights.Colors.RED, Lights.Patterns.MARCH));
