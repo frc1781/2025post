@@ -56,4 +56,9 @@ public final class Constants
     public static final int hopperFront = 0;
     public static final int exit = 2;
   }
+
+  public static class Conveyor {
+    public static final int MOTOR_CAN_ID = 15;
+
+  }
 }
