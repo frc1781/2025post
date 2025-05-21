@@ -11,11 +11,11 @@ import java.util.function.BooleanSupplier;
 public class Climber extends SubsystemBase {
     LinSparkMax motor;
 
-    public Climber() {
-        motor = new LinSparkMax(Constants.Climber.MOTOR);
-    }
+    // public Climber() {
+    //     motor = new LinSparkMax(Constants.Climber.MOTOR);
+    // }
     
-    public Command clearCoral(BooleanSupplier hasCoralToClear) {
-        return new RunCommand(() -> {motor.set(hasCoralToClear.getAsBoolean() ? 0.5 : 0);}, this);
-    }         
+    // public Command clearCoral(BooleanSupplier hasCoralToClear) {
+    //     return new RunCommand(() -> {motor.set(hasCoralToClear.getAsBoolean() ? 0.5 : 0);}, this);
+    // }         
 }
