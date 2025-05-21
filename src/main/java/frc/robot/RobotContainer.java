@@ -32,6 +32,7 @@ public class RobotContainer
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ava"));
   private final Conveyor conveyor = new Conveyor();
   private final Lights lights = new Lights();
+  private final Climber climber = new Climber();
 
   Trigger coralEnter = new Trigger(sensation::coralPresent);
   Trigger coralHopper = new Trigger(sensation::coralInHopper);
@@ -103,6 +104,7 @@ public class RobotContainer
 
     conveyor.setDefaultCommand(conveyor.clearCoral(coralHopper));
     lights.setDefaultCommand(lights.set(Lights.Special.OFF));
+    climber.setDefaultCommand(climber.idle());
 
     if (Robot.isSimulation())
     {

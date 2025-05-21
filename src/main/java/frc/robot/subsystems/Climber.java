@@ -50,7 +50,7 @@ public class Climber extends SubsystemBase {
         climberPID.reset();
     }
 
-    Command idle(){
+    public Command idle(){
 
         return new RunCommand(() -> {
             climberDutyCycle = climberPID.calculate(armEncoder.getPosition(), requestedPosition) + gravityDutyCycle;
@@ -62,13 +62,13 @@ public class Climber extends SubsystemBase {
 
     }
 
-    Command ascend(){
+    public Command ascend(){
         return new InstantCommand(() -> {
             requestedPosition -= .03;
         }, this);
     }
 
-    Command descend(){
+    public Command descend(){
         return new InstantCommand(() -> {
             requestedPosition += .03;
         }, this);
