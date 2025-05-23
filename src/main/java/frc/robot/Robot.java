@@ -23,7 +23,7 @@ public class Robot extends LoggedRobot {
   private RobotContainer theRobotContainer;
   private Timer disabledTimer;
 
-  @Override
+  
   public void robotInit() {
     theRobotContainer = new RobotContainer();
     disabledTimer = new Timer(); //for turning off breaking when disabled
