@@ -28,6 +28,16 @@ public class Robot extends LoggedRobot {
     theRobotContainer = new RobotContainer();
     disabledTimer = new Timer(); //for turning off breaking when disabled
 
+    if (isReal()) {
+      Logger.addDataReceiver(new WPILOGWriter());
+      Logger.addDataReceiver(new NT4Publisher());
+      new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
+    } else {
+      Logger.addDataReceiver(new NT4Publisher());
+    }
+
+    Logger.start();
+
     if (isSimulation())  {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
