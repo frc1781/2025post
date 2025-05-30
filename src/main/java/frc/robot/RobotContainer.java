@@ -137,7 +137,8 @@ public class RobotContainer
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
-
+      driverXbox.povUp().whileTrue(climber.ascend());
+      driverXbox.povDown().whileTrue(climber.descend());
       driverXbox.y().onTrue(lights.set(Lights.Special.RAINBOW));
       driverXbox.b().onTrue(lights.set(Lights.Colors.WHITE, Lights.Patterns.MARCH));
 
