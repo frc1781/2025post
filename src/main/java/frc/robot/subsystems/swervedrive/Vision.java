@@ -44,6 +44,8 @@ import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.proto.PhotonTrackedTargetProto;
+
 import swervelib.SwerveDrive;
 import swervelib.telemetry.SwerveDriveTelemetry;
 
@@ -474,19 +476,22 @@ public class Vision
         return Optional.empty();
       }
 
-      PhotonPipelineResult bestResult       = resultsList.get(0);
+      PhotonPipelineResult bestResult = resultsList.get(0);
       if (!bestResult.hasTargets()) {
         return Optional.empty();
       }
-      double               amiguity         = bestResult.getBestTarget().getPoseAmbiguity();
-      double               currentAmbiguity = 0;
+      double amiguity = bestResult.getBestTarget().getPoseAmbiguity();
+      double currentAmbiguity = 0;
       for (PhotonPipelineResult result : resultsList)
       {
-        currentAmbiguity = result.getBestTarget().getPoseAmbiguity();
-        if (currentAmbiguity < amiguity && currentAmbiguity > 0)
-        {
-          bestResult = result;
-          amiguity = currentAmbiguity;
+        PhotonTrackedTarget best = result.getBestTarget();
+        if (best != null) {
+          currentAmbiguity = best.getPoseAmbiguity();
+          if (currentAmbiguity < amiguity && currentAmbiguity > 0)
+          {
+            bestResult = result;
+            amiguity = currentAmbiguity;
+          }
         }
       }
       return Optional.of(bestResult);
