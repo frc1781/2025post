@@ -31,9 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonTargetSortMode;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.PhotonUtils;
 import org.photonvision.simulation.PhotonCameraSim;
@@ -41,6 +44,8 @@ import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.proto.PhotonTrackedTargetProto;
+
 import swervelib.SwerveDrive;
 import swervelib.telemetry.SwerveDriveTelemetry;
 
@@ -129,8 +134,20 @@ public class Vision
        */
       visionSim.update(swerveDrive.getSimulationDriveTrainPose().get());
     }
+    List<Pose3d> seenAprilTags = new ArrayList<>();
+    
     for (Cameras camera : Cameras.values())
     {
+      Optional<PhotonPipelineResult> result = camera.getBestResult();
+      if (result.isPresent()) {
+        PhotonPipelineResult pipelineResult = result.get();
+          for(PhotonTrackedTarget target : pipelineResult.targets) {
+            Optional<Pose3d> aprilTagPose = fieldLayout.getTagPose(target.getFiducialId());
+              aprilTagPose.ifPresent(seenAprilTags::add);
+          }
+      }
+      
+      //add ids and poses to an arraylist
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
       if (poseEst.isPresent())
       {
@@ -141,6 +158,7 @@ public class Vision
       }
     }
 
+    Logger.recordOutput("Vision/SeenApriltags", seenAprilTags.toArray(Pose3d[]::new));
   }
 
   /**
@@ -458,16 +476,22 @@ public class Vision
         return Optional.empty();
       }
 
-      PhotonPipelineResult bestResult       = resultsList.get(0);
-      double               amiguity         = bestResult.getBestTarget().getPoseAmbiguity();
-      double               currentAmbiguity = 0;
+      PhotonPipelineResult bestResult = resultsList.get(0);
+      if (!bestResult.hasTargets()) {
+        return Optional.empty();
+      }
+      double amiguity = bestResult.getBestTarget().getPoseAmbiguity();
+      double currentAmbiguity = 0;
       for (PhotonPipelineResult result : resultsList)
       {
-        currentAmbiguity = result.getBestTarget().getPoseAmbiguity();
-        if (currentAmbiguity < amiguity && currentAmbiguity > 0)
-        {
-          bestResult = result;
-          amiguity = currentAmbiguity;
+        PhotonTrackedTarget best = result.getBestTarget();
+        if (best != null) {
+          currentAmbiguity = best.getPoseAmbiguity();
+          if (currentAmbiguity < amiguity && currentAmbiguity > 0)
+          {
+            bestResult = result;
+            amiguity = currentAmbiguity;
+          }
         }
       }
       return Optional.of(bestResult);
