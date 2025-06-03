@@ -8,6 +8,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class CRASparkMax extends SparkMax {
 
+
+    
     public CRASparkMax(int canid, boolean inverted, boolean idleBreak, int stallLimit) {
         super(canid, SparkLowLevel.MotorType.kBrushless);
         SparkMaxConfig config = new SparkMaxConfig();

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.revrobotics.spark.config.ClosedLoopConfig;
+
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -59,6 +61,26 @@ public final class Constants
 
   public static class Conveyor {
     public static final int MOTOR_CAN_ID = 15;
-
   }
+
+ public class Climber {
+        public static final int MOTOR = 14;
+
+        public static final double RADIANS_PER_REVOLUTION = (Math.PI * 2) / 125;
+
+        public static final double P = 0;
+        public static final double I = 0;
+        public static final double D = 0;
+
+        public static final double KS = 0;
+        public static final double KG = 3.96;
+        public static final double KV = 2.44;
+        public static final double KA = 0.14;
+
+        public static final ClosedLoopConfig CLOSED_LOOP_CONFIG = new ClosedLoopConfig()
+                .p(P)
+                .i(I)
+                .d(D);
+    }
+
 }
