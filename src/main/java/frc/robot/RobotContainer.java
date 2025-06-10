@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Conveyor.Conveyor;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -102,7 +103,7 @@ public class RobotContainer
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     }
 
-    conveyor.setDefaultCommand(conveyor.clearCoral(coralHopper));
+    conveyor.setDefaultCommand(conveyor.clearCoral(driverXbox.b()));
     lights.setDefaultCommand(lights.set(Lights.Special.OFF));
     climber.setDefaultCommand(climber.idle());
 
@@ -140,10 +141,10 @@ public class RobotContainer
       driverXbox.povUp().whileTrue(climber.ascend());
       driverXbox.povDown().whileTrue(climber.descend());
       driverXbox.y().onTrue(lights.set(Lights.Special.RAINBOW));
-      driverXbox.b().onTrue(lights.set(Lights.Colors.WHITE, Lights.Patterns.MARCH));
+      //driverXbox.b().onTrue(lights.set(Lights.Colors.WHITE, Lights.Patterns.MARCH));
 
-      coralEnter.and(coralExit.negate()).and(coralHopper.negate()).onTrue(lights.set(Lights.Colors.RED, Lights.Patterns.FAST_FLASH));
-      coralHopper.and(coralExit.negate()).onTrue(lights.set(Lights.Colors.RED, Lights.Patterns.MARCH));
+      coralEnter.and(coralExit.negate()).and(driverXbox.b().negate()).onTrue(lights.set(Lights.Colors.RED, Lights.Patterns.FAST_FLASH));
+      driverXbox.b().and(coralExit.negate()).onTrue(lights.set(Lights.Colors.RED, Lights.Patterns.MARCH));
       coralExit.onFalse(lights.set(Lights.Colors.RED, Lights.Patterns.SOLID));
     }
   }
