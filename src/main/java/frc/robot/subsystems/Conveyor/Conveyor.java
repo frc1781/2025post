@@ -13,6 +13,6 @@ public class Conveyor extends SubsystemBase {
     }
     
     public Command clearCoral(BooleanSupplier hasCoralToClear) {
-        return new RunCommand(() -> {io.set(hasCoralToClear.getAsBoolean() ? 0.5 : 0);}, this);
+        return new RunCommand(() -> {io.set(hasCoralToClear.getAsBoolean() ? 0.5 : 0); io.update();}, this);
     }         
 }
