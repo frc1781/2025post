@@ -1,20 +1,18 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Conveyor;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import java.util.function.BooleanSupplier;
-import CRA.CRASparkMax;
 
 public class Conveyor extends SubsystemBase {
-    CRASparkMax motor;
+    ConveyorIO io;
 
     public Conveyor() {
-        motor = new CRASparkMax(Constants.Conveyor.MOTOR_CAN_ID, false, false);
+        io = new ConveyorSim();
     }
     
     public Command clearCoral(BooleanSupplier hasCoralToClear) {
-        return new RunCommand(() -> {motor.set(hasCoralToClear.getAsBoolean() ? 0.5 : 0);}, this);
+        return new RunCommand(() -> {io.set(hasCoralToClear.getAsBoolean() ? 0.5 : 0);}, this);
     }         
 }

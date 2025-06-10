@@ -2,9 +2,13 @@ package frc.robot.subsystems.Conveyor;
 
 public interface ConveyorIO 
 {
-    void set(float speed);
-    void brake(boolean value);
-    void inverted(boolean value);
+    record Data
+    (
+        //some stuff
+    ) {}
+    Data data = new Data();
+
+    void set(double speed);
 
     void update();
 }
