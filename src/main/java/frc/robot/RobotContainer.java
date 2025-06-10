@@ -20,7 +20,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Conveyor.Conveyor;
+import frc.robot.subsystems.Climber.*;
+import frc.robot.subsystems.Conveyor.*;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -31,9 +32,9 @@ public class RobotContainer
   final CommandXboxController driverXbox = new CommandXboxController(0);
   private final Sensation sensation = new Sensation();
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/ava"));
-  private final Conveyor conveyor = new Conveyor();
-  private final Lights lights = new Lights();
-  private final Climber climber = new Climber();
+  private final Conveyor conveyor; 
+  private final Lights lights;
+  private final Climber climber;
 
   Trigger coralEnter = new Trigger(sensation::coralPresent);
   Trigger coralHopper = new Trigger(sensation::coralInHopper);
@@ -79,6 +80,9 @@ public class RobotContainer
 
   public RobotContainer()
   {
+    lights = new Lights();
+    conveyor = new Conveyor(Robot.isSimulation() ? new ConveyorSim() : new ConveyorReal());
+    climber = new Climber(Robot.isSimulation() ? new ClimberSim() : new ClimberReal());
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));

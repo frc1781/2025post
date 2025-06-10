@@ -12,7 +12,7 @@ public class ConveyorReal implements ConveyorIO
 {
     private SparkMax motor;
 
-    ConveyorReal()
+    public ConveyorReal()
     {
         motor = new SparkMax(Constants.Conveyor.MOTOR_CAN_ID, SparkLowLevel.MotorType.kBrushless);
         SparkMaxConfig config = new SparkMaxConfig();

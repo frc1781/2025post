@@ -8,7 +8,7 @@ public class ConveyorSim implements ConveyorIO
 {
     DCMotorSim motor;
 
-    ConveyorSim()
+    public ConveyorSim()
     {
         motor = new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 1, 3), DCMotor.getNEO(1));
     }

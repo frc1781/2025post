@@ -1,5 +1,4 @@
-package frc.robot.subsystems;
-
+package frc.robot.subsystems.Climber;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -23,8 +22,10 @@ public class Climber extends SubsystemBase {
     private SparkMax motor;
     private ArmFeedforward armFeedforward;
     private boolean initialized;
-
-    public Climber() {
+    private ClimberIO io;
+    
+    public Climber(ClimberIO io) {
+        this.io = io;
         initialized = false;
         motor = new SparkMax(Constants.Climber.MOTOR, SparkLowLevel.MotorType.kBrushless);
         SparkMaxConfig leverMotorConfig = new SparkMaxConfig();
